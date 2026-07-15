@@ -1,57 +1,76 @@
-# unity-2d-game
+# Crash＆Hop
 
-- ゲームクリエイトサークル所属、Unity 2Dゲームの学習用プロジェクト
-- 2026年度 能開大学校祭向けに作成
+- ゲームクリエイトサークル所属、Unity 2Dゲーム学習用プロジェクト
+- 2026年度 能開大学校祭向け制作
 
 ## プロジェクト概要
 
 - プロジェクト名: `unity-2d-game`
-- ゲームタイトル（仮）: `Hopping Mile`
-- 目的: 2D横スクロール風のジャンプアクションを制作し、Unityの使い方と基本的なC#スクリプトを学ぶ
+- ゲームタイトル: `Crash＆Hop`
+- 目的: 2D横スクロール風ジャンプアクションを制作し、UnityとC#スクリプトの基礎を学ぶ
 - Unityバージョン: `6000.3.12f1`
 
-## このプロジェクトで学べること
+## ゲームコンセプト
 
-- Unityエディタの基本操作
+- 背景と様々なサイズの壁が横から流れてくる
+- キャラクターは左右とジャンプで移動し、壁をかわす
+- 壁に当たると壁が壊れてキャラクターがダメージを受ける
+- HPが0にならないようにゴールまで壁を回避し続ける
+- HP0でゲームオーバー
 
-## ゲームの基本ルール
+## 現在の実装内容
 
-- 操作キャラクターをジャンプさせて進む
-- 左から右へ進みながら障害物を避ける
-- HPゲージやゴールを目指す要素を追加予定
+- `PlayerController` でプレイヤーの左右移動とジャンプを制御
+- `BackGroundMover` でUIの背景画像をUVオフセットでスクロール表示
+- `SpriteSyncMover` で背景スクロールに合わせてオブジェクトを同期移動
+- `Assets/Scenes/SampleScene.unity` にサンプルシーンが存在
+
+## ゲームの基本操作
+
+- 右方向: `→` キー
+- 左方向: `←` キー
+- ジャンプ: `Space` キー
 
 ## プロジェクト構成
 
-- `Assets/` - ゲームで使う画像、シーン、スクリプト、プレハブなどを格納
-- `Assets/PreFab/` - プレイヤーやワイヤーなどのプレハブ
-- `Assets/Scripts/` - C# スクリプト群
-- `Assets/Scenes/` - Unity シーンファイル
-- `ProjectSettings/` - Unity プロジェクト設定
-- `Packages/` - Unity パッケージ設定
+- `Assets/` - 画像、シーン、スクリプト、設定ファイル
+- `Assets/Scripts/` - C#スクリプト
+- `Assets/Scenes/` - Unityシーンファイル（`SampleScene.unity`）
+- `Assets/Settings/` - シーンテンプレートやURP設定
+- `ProjectSettings/` - Unityプロジェクトの設定
+- `Packages/` - Unityパッケージ定義
 
-## 使い方・起動方法
+## 起動方法
 
-1. Unity で `Assets/Scenes/start.unity` などのシーンを開く
+1. Unity で `Assets/Scenes/SampleScene.unity` を開く
 2. エディタ上部の `Play` ボタンを押す
-3. ゲームプレイ中にキャラクターを操作してみる
+3. `←` / `→` キーと `Space` キーで操作する
+
+## スクリプトの学習ポイント
+
+- `Assets/Scripts/PlayerController.cs`
+  - `Rigidbody2D` を使った物理移動
+  - キー入力による左右移動とジャンプ処理
+  - `SpriteRenderer.flipX` でキャラクターの向きを反転
+
+- `Assets/Scripts/BackGroundMover.cs`
+  - UI `Image` のマテリアルを複製して安全に操作
+  - テクスチャオフセットを時間で変化させて背景をスクロール
+
+- `Assets/Scripts/SpriteSyncMover.cs`
+  - 背景のスクロール速度と同期してオブジェクトを移動
+  - `m_loopWorldDistance` でワールド空間の移動量を調整
 
 ## 初心者向けのポイント
 
 - `Assets/Scripts/` を開いて、どのスクリプトがプレイヤー操作に使われているか確認する
-- シーン内のオブジェクトを選択して、Inspector のコンポーネントを眺める
-- プレハブを編集すると、同じタイプのオブジェクト全体に変更が反映される
-- まずは小さな変更（位置や色、スピード）から試し、挙動を確認する
-
-## 参考資料
-
-- [ガチ初心者向けUnity6の使い方入門！ゲーム開発講師が最初に説明すること](https://www.youtube.com/watch?v=jr2BvXX1JGk&start=892)
-  - Unityの基礎、アセットストア、C#プログラミングの初歩が学べる
-
----
+- `SampleScene.unity` のオブジェクトを選択し、Inspector でコンポーネントを眺める
+- `PlayerController` の `jumpPower` や `xSpeed` を変更して挙動を試す
+- `BackGroundMover` の `m_offsetSpeed` を変更してスクロール速度を調整する
 
 ## 今後の予定
 
-- ゲームルールの詳細化
-- 障害物・敵の追加
-- スコア・HP表示の実装
-- スマホ操作やキー入力の改善
+- 障害物や敵の追加
+- スコア表示やHPバーの実装
+- ゴール判定やクリア演出の追加
+- モバイル操作対応やキー入力の改善

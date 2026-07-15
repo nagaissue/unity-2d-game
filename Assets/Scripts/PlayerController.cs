@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 	private void MoveUpdate ()
 	{
 		// X方向移動入力
-		if (Input.GetKey (KeyCode.RightArrow))
+		if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.D))
 		{// 右方向の移動入力
 			// X方向移動速度をプラスに設定
 			xSpeed = 6.0f;
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 			// スプライトを通常の向きで表示
 			spriteRenderer.flipX = false;
 		}
-		else if (Input.GetKey (KeyCode.LeftArrow))
+		else if (Input.GetKey (KeyCode.LeftArrow) || Input.GetKey (KeyCode.A))
 		{// 左方向の移動入力
 			// X方向移動速度をマイナスに設定
 			xSpeed = -6.0f;
