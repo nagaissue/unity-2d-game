@@ -49,9 +49,12 @@
 ## スクリプトの学習ポイント
 
 - `Assets/Scripts/PlayerController.cs`
-  - `Rigidbody2D` を使った物理移動
-  - キー入力による左右移動とジャンプ処理
-  - `SpriteRenderer.flipX` でキャラクターの向きを反転
+- `Assets/Scripts/PlayerController.cs`
+  - `Rigidbody2D` を使った物理移動（`FixedUpdate` で速度を反映）
+  - 矢印キーで左右移動（`Input.GetKey`）と `Space` キーでジャンプ（`Input.GetKeyDown("space")`）
+  - `jumpPower` は `[SerializeField]` で調整可能、`xSpeed` は移動量を保持（`[HideInInspector]`）
+  - 接地判定用のセンサー処理はコメント化済み（`isGrounded` フラグを使用）
+  - `SpriteRenderer.flipX` で左右向きを反転
 
 - `Assets/Scripts/BackGroundMover.cs`
   - UI `Image` のマテリアルを複製して安全に操作
