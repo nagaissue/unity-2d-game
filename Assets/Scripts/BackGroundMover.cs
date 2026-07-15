@@ -16,7 +16,13 @@ public class BackGroundMover : MonoBehaviour
 	private void Start()
 	{
 		var image = GetComponent<Image>();
-		m_copiedMaterial = image.material;
+
+		// 元のマテリアルを「Instantiate」を使って自分自身専用に「複製（クローン）」し、
+		// それを自身のマテリアルとして再設定します。
+		// これにより、Unityの共有のデフォルトマテリアル自体を傷つける心配がなくなります。
+		//m_copiedMaterial = image.material;
+		m_copiedMaterial = Instantiate(image.material); // マテリアルをコピーして使う
+		image.material = m_copiedMaterial; // コピーしたマテリアルをImageにセットする
 
 		// マテリアルがnullだったら例外が出ます。
 		Assert.IsNotNull(m_copiedMaterial);
@@ -38,8 +44,12 @@ public class BackGroundMover : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		// ゲームオブジェクト破壊時にマテリアルのコピーも消しておく
-		Destroy(m_copiedMaterial);
-		m_copiedMaterial = null;
+		// 複製したマテリアルを安全に破棄します。
+		if(m_copiedMaterial != null)
+		{
+			// ゲームオブジェクト破壊時にマテリアルのコピーも消しておく
+			Destroy(m_copiedMaterial);
+			m_copiedMaterial = null;
+		}
 	}
 }
