@@ -12,13 +12,14 @@ public class PlayerController : MonoBehaviour
 	private SpriteRenderer spriteRenderer;
 
 	// 移動関連変数
-	[HideInInspector] public float xSpeed; // X方向移動速度
-	[HideInInspector] public bool rightFacing; // 向いている方向(true.右向き false:左向き)
-	[SerializeField] float jumpPower = 5.0f; // ジャンプ力
+	private float xSpeed; // X方向移動速度
+	public bool rightFacing { get; private set; } // 向いている方向(true:右向き false:左向き)
+	[SerializeField] private float jumpPower = 5.0f; // ジャンプ力
+	[SerializeField] private LayerMask groundLayer = 1 << 0;
+	[SerializeField] private float groundNormalMinY = 0.65f;
 
-	//private Sensor_ActorController   groundSensor;
-	private bool isGrounded = true; // 地面に接地しているかどうか
-	//private bool isWall = false; // 壁に接触しているかどうか
+	private bool isGrounded;
+	private int groundContactCount;
 
 	// Start（オブジェクト有効化時に1度実行）
 	void Start()
@@ -81,28 +82,52 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void JumpUpdate ()
 	{
-		/*
-		// 接地していない状態で、接地センサーが接地している場合
-		if (!isGrounded && groundSensor.State())
-        {
-            isGrounded = true;
-        }
-
-        // 接地している状態で、接地センサーが接地していない場合
-        if (isGrounded && !groundSensor.State())
-        {
-            isGrounded = false;
-        }
-		*/
-
 		// ジャンプ操作
-		if (Input.GetKeyDown("space") && isGrounded) // スペースキーが押され、かつ接地している場合
-		{// ジャンプ開始
-			//isGrounded = false; // 接地フラグをfalseにする
-			// ジャンプ力を適用
-			rigidbody2D.linearVelocity = new Vector2 (rigidbody2D.linearVelocity.x, jumpPower);
-			//groundSensor.Disable(0.2f); // 接地センサーを0.2秒間無効化
+		if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+		{
+			rigidbody2D.linearVelocity = new Vector2(rigidbody2D.linearVelocity.x, jumpPower);
 		}
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		EvaluateGroundContact(collision, true);
+	}
+
+	private void OnCollisionStay2D(Collision2D collision)
+	{
+		EvaluateGroundContact(collision, true);
+	}
+
+	private void OnCollisionExit2D(Collision2D collision)
+	{
+		EvaluateGroundContact(collision, false);
+	}
+
+	private void EvaluateGroundContact(Collision2D collision, bool isEntering)
+	{
+		if (((1 << collision.gameObject.layer) & groundLayer) == 0)
+		{
+			return;
+		}
+
+		foreach (var contact in collision.contacts)
+		{
+			if (contact.normal.y >= groundNormalMinY)
+			{
+				if (isEntering)
+				{
+					groundContactCount++;
+				}
+				else if (groundContactCount > 0)
+				{
+					groundContactCount--;
+				}
+				break;
+			}
+		}
+
+		isGrounded = groundContactCount > 0;
 	}
 
 	// FixedUpdate（一定時間ごとに1度ずつ実行・物理演算用）

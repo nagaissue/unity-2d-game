@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(Image))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class BackGroundMover : MonoBehaviour
 {
 	private const float k_maxLength = 1f;
@@ -11,20 +10,28 @@ public class BackGroundMover : MonoBehaviour
 	[SerializeField]
 	private Vector2 m_offsetSpeed;
 
+	[SerializeField]
+	private string m_sortingLayerName = "Background";
+
+	[SerializeField]
+	private int m_orderInLayer = -100;
+
+	public Vector2 OffsetSpeed => m_offsetSpeed;
+
 	private Material m_copiedMaterial;
 
 	private void Start()
 	{
-		var image = GetComponent<Image>();
+		var spriteRenderer = GetComponent<SpriteRenderer>();
 
-		// 元のマテリアルを「Instantiate」を使って自分自身専用に「複製（クローン）」し、
-		// それを自身のマテリアルとして再設定します。
-		// これにより、Unityの共有のデフォルトマテリアル自体を傷つける心配がなくなります。
-		//m_copiedMaterial = image.material;
-		m_copiedMaterial = Instantiate(image.material); // マテリアルをコピーして使う
-		image.material = m_copiedMaterial; // コピーしたマテリアルをImageにセットする
+		// ワールド空間の背景として SpriteRenderer を使用する
+		// 元のマテリアルを複製し、自分用にセットすることで共有マテリアルを汚さない
+		m_copiedMaterial = Instantiate(spriteRenderer.material);
+		spriteRenderer.material = m_copiedMaterial;
 
-		// マテリアルがnullだったら例外が出ます。
+		spriteRenderer.sortingLayerName = m_sortingLayerName;
+		spriteRenderer.sortingOrder = m_orderInLayer;
+
 		Assert.IsNotNull(m_copiedMaterial);
 	}
 

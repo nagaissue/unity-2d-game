@@ -12,11 +12,21 @@ public class WallMover : MonoBehaviour
 	[Tooltip("これより左に出たら画面外とみなして自壊する（カメラの見える範囲より少し外側に設定）")]
 	[SerializeField] private float m_despawnX = -12f;
 
+	[SerializeField] private string m_sortingLayerName = "Default";
+	[SerializeField] private int m_orderInLayer = 0;
+
 	private Rigidbody2D m_rigidbody2D;
 
 	private void Awake()
 	{
 		m_rigidbody2D = GetComponent<Rigidbody2D>();
+
+		var spriteRenderer = GetComponent<SpriteRenderer>();
+		if (spriteRenderer != null)
+		{
+			spriteRenderer.sortingLayerName = m_sortingLayerName;
+			spriteRenderer.sortingOrder = m_orderInLayer;
+		}
 
 		// Kinematicでない場合、スクリプトでの位置制御と物理挙動が競合するため注意喚起する
 		if (m_rigidbody2D.bodyType != RigidbodyType2D.Kinematic)

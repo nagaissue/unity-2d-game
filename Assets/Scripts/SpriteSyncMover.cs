@@ -16,18 +16,9 @@ public class SpriteSyncMover : MonoBehaviour
     {
         m_startPosition = transform.position;
 
-        // 背景スクリプトからリフレクション（または直接アクセス）で速度を取得する
         if (m_backgroundMover != null)
         {
-            // BackGroundMoverのm_offsetSpeedを取得
-            // (リフレクションを使って非公開フィールドから安全に読み込みます)
-            var field = typeof(BackGroundMover).GetField("m_offsetSpeed", 
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
-            if (field != null)
-            {
-                m_offsetSpeed = (Vector2)field.GetValue(m_backgroundMover);
-            }
+            m_offsetSpeed = m_backgroundMover.OffsetSpeed;
         }
         else
         {
