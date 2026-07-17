@@ -9,6 +9,7 @@
 - ゲームタイトル: `Crash＆Hop`
 - 目的: 2D横スクロール風ジャンプアクションを制作し、UnityとC#スクリプトの基礎を学ぶ
 - Unityバージョン: `6000.3.12f1`
+- 本日の学校祭までに完成は間に合いませんでしたが、今後もゲームクリエイトサークルの活動で完成を目指します。
 
 ## ゲームコンセプト
 
@@ -21,14 +22,16 @@
 ## 現在の実装内容
 
 - `PlayerController` でプレイヤーの左右移動とジャンプを制御
-- `BackGroundMover` でUIの背景画像をUVオフセットでスクロール表示
-- `SpriteSyncMover` で背景スクロールに合わせてオブジェクトを同期移動
+- `BackGroundMover` で `SpriteRenderer` ベースのワールド空間背景をUVオフセットでスクロール表示
+- `SpriteSyncMover` で `BackGroundMover` の速度と同期してオブジェクトを移動
+- `WallMover` で `GameSpeedManager` に基づく一貫した壁スクロールを実装
+- `WallSpawner` でランダム間隔・ランダム高さで壁をスポーン
 - `Assets/Scenes/SampleScene.unity` にサンプルシーンが存在
 
 ## ゲームの基本操作
 
-- 右方向: `→` キー
-- 左方向: `←` キー
+- 右方向: `→` キー / `D` キー
+- 左方向: `←` キー / `A` キー
 - ジャンプ: `Space` キー
 
 ## プロジェクト構成
@@ -46,30 +49,31 @@
 2. エディタ上部の `Play` ボタンを押す
 3. `←` / `→` キーと `Space` キーで操作する
 
-## スクリプトの学習ポイント
+## スクリプトと学習ポイント
 
 - `Assets/Scripts/PlayerController.cs`
-- `Assets/Scripts/PlayerController.cs`
   - `Rigidbody2D` を使った物理移動（`FixedUpdate` で速度を反映）
-  - 矢印キーで左右移動（`Input.GetKey`）と `Space` キーでジャンプ（`Input.GetKeyDown("space")`）
-  - `jumpPower` は `[SerializeField]` で調整可能、`xSpeed` は移動量を保持（`[HideInInspector]`）
-  - 接地判定用のセンサー処理はコメント化済み（`isGrounded` フラグを使用）
+  - 矢印キー・`A/D` キーで左右移動（`Input.GetKey`）と `Space` キーでジャンプ（`Input.GetKeyDown(KeyCode.Space)`）
+  - `jumpPower` は `[SerializeField]` で調整可能
+  - 接地判定を `OnCollisionEnter2D` / `OnCollisionStay2D` / `OnCollisionExit2D` で扱い、`isGrounded` を更新
   - `SpriteRenderer.flipX` で左右向きを反転
 
 - `Assets/Scripts/BackGroundMover.cs`
-  - UI `Image` のマテリアルを複製して安全に操作
-  - テクスチャオフセットを時間で変化させて背景をスクロール
+  - `SpriteRenderer` ベースのワールド空間背景に変更
+  - `SpriteRenderer` のマテリアルを複製して共有マテリアルを汚さずにUVオフセットを適用
+  - `sortingLayerName` と `sortingOrder` を設定可能にしてUIとの混在を回避
 
 - `Assets/Scripts/SpriteSyncMover.cs`
-  - 背景のスクロール速度と同期してオブジェクトを移動
-  - `m_loopWorldDistance` でワールド空間の移動量を調整
+  - `BackGroundMover.OffsetSpeed` を直接参照して同期移動
+  - リフレクションを廃止し、速度取得を安定化
 
-## 初心者向けのポイント
+### 初心者向けの学習ポイント
 
 - `Assets/Scripts/` を開いて、どのスクリプトがプレイヤー操作に使われているか確認する
 - `SampleScene.unity` のオブジェクトを選択し、Inspector でコンポーネントを眺める
 - `PlayerController` の `jumpPower` や `xSpeed` を変更して挙動を試す
 - `BackGroundMover` の `m_offsetSpeed` を変更してスクロール速度を調整する
+- Unity の基本用語（`GameObject`、`Component`、`Prefab`、`Scene`、`Inspector` など）も合わせて学ぶと理解が深まる
 
 ## 今後の予定
 
