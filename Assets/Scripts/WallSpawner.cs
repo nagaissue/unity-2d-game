@@ -49,10 +49,10 @@ public class WallSpawner : MonoBehaviour
 
 	private void SpawnWall()
 	{
+		Debug.Log("SpawnWall呼ばれた"); // メソッドの先頭に移動（条件に関わらず必ず出力される）
+
 		if (m_wallPrefabs == null || m_wallPrefabs.Length == 0)
 		{
-			Debug.Log("SpawnWall呼ばれた"); // ← 追加
-			
 			Debug.LogWarning("WallSpawner: m_wallPrefabsが未設定です（配列のSizeを0以上にしてください）");
 			return;
 		}
@@ -67,7 +67,8 @@ public class WallSpawner : MonoBehaviour
 		}
 
 		float y = Random.Range(m_minY, m_maxY);
-		Instantiate(prefab, new Vector3(m_spawnX, y, 0f), Quaternion.identity);
+		var spawned = Instantiate(prefab, new Vector3(m_spawnX, y, 0f), Quaternion.identity);
+		Debug.Log("Wall生成完了: " + spawned.name + " position=" + spawned.transform.position); // 生成できたか確認用
 	}
 
 	private void SetNextInterval()
