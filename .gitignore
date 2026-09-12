@@ -26,3 +26,12 @@
 .DS_Store
 Thumbs.db
 *.swp
+
+# --- 2026/09/12
+!_Archive_Crash&Hop/
+!_Archive_Crash&Hop/**
+!docs/
+!docs/**
+!AGENTS.md
+!GEMINI.md
+!HANDOVER.md
