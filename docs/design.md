@@ -1,4 +1,4 @@
-# Unity 2Dゲーム制作 企画・設計
+# Unity 2Dゲーム制作 設計書
 
 **プロジェクト名**: Cyber Room 24/7 (仮称)  
 **開発環境**: Unity Hub 3.16.4 / Unity Editor 6000.3.12f1 / C# / VS Code  
